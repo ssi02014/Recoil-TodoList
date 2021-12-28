@@ -8,21 +8,24 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 const Home = () => {
   const [contents, setContents] = useRecoilState<string>(inputState);
-  const todos = useRecoilValue<Todo[]>(todosState);
-  const setTodos = useSetRecoilState<Todo[]>(todosState);
+  const [todos, setTodos] = useRecoilState<Todo[]>(todosState);
 
-  const id = useRef(3);
+  const id = useRef(0);
 
   const addTodo = useCallback(
     (e) => {
       e.preventDefault();
+
+      if (!contents) return;
 
       const todo: Todo = {
         id: (id.current += 1),
         contents,
         isCompleted: false,
       };
+
       setTodos([...todos, todo]);
+      onReset();
     },
     [contents, todos]
   );
@@ -32,12 +35,16 @@ const Home = () => {
     setContents(value);
   }, []);
 
+  const onReset = useCallback(() => {
+    setContents("");
+  }, []);
+
   return (
     <>
       <TodoTemplate>
         <TodoTitle />
-        <Form addTodo={addTodo} onChange={onChange} />
-        <TodoList />
+        <Form contents={contents} addTodo={addTodo} onChange={onChange} />
+        <TodoList todos={todos} />
       </TodoTemplate>
     </>
   );
