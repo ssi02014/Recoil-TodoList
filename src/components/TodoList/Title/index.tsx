@@ -1,7 +1,8 @@
 import React from "react";
+import { StyledTitle } from "./style";
 
 const TodoTitle = () => {
-  return <h1>투두리스트 Recoil</h1>;
+  return <StyledTitle>투두리스트 Recoil</StyledTitle>;
 };
 
 export default TodoTitle;
