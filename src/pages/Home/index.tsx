@@ -10,7 +10,7 @@ const Home = () => {
       <TodoTemplate>
         <TodoTitle />
         <Form />
-        {/* <TodoList /> */}
+        <TodoList />
       </TodoTemplate>
     </>
   );
