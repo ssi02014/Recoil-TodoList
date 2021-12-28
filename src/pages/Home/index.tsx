@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import Form from "../../components/Form";
 import TodoList from "../../components/TodoList/List";
 import TodoTemplate from "../../components/TodoList/Template";
@@ -9,6 +9,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 const Home = () => {
   const [contents, setContents] = useRecoilState<string>(inputState);
   const [todos, setTodos] = useRecoilState<Todo[]>(todosState);
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   const id = useRef(0);
 
@@ -35,6 +36,13 @@ const Home = () => {
     setContents(value);
   }, []);
 
+  const onDelete = useCallback(
+    (id) => {
+      setTodos(todos.filter((todo) => todo.id !== id));
+    },
+    [todos]
+  );
+
   const onReset = useCallback(() => {
     setContents("");
   }, []);
@@ -44,7 +52,7 @@ const Home = () => {
       <TodoTemplate>
         <TodoTitle />
         <Form contents={contents} addTodo={addTodo} onChange={onChange} />
-        <TodoList todos={todos} />
+        <TodoList todos={todos} onDelete={onDelete} />
       </TodoTemplate>
     </>
   );
