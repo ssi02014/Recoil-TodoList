@@ -5,14 +5,21 @@ import TodoItem from "../Item";
 
 interface Props {
   todos: Todo[];
+  isOpenModal: boolean;
+  onModal: (todo: Todo) => void;
   onDelete: (id: number) => void;
 }
-const TodoList = ({ todos, onDelete }: Props) => {
+const TodoList = ({ todos, isOpenModal, onModal, onDelete }: Props) => {
   return (
     <>
       {todos.length > 0 ? (
         todos.map((todo) => (
-          <TodoItem key={todo.id} todo={todo} onDelete={onDelete} />
+          <TodoItem
+            key={todo.id}
+            todo={todo}
+            onModal={onModal}
+            onDelete={onDelete}
+          />
         ))
       ) : (
         <p style={{ textAlign: "center", color: "#fff" }}>

@@ -5,11 +5,17 @@ import TodoTemplate from "../../components/TodoList/Template";
 import TodoTitle from "../../components/TodoList/Title";
 import { inputState, Todo, todosState } from "../../recoil/todo";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import Modal from "../../components/Modal";
+import Button from "../../components/Button";
 
 const Home = () => {
   const [contents, setContents] = useRecoilState<string>(inputState);
   const [todos, setTodos] = useRecoilState<Todo[]>(todosState);
-  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [modal, setModal] = useState({
+    isOpen: false,
+    contents: "",
+    id: 0,
+  });
 
   const id = useRef(0);
 
@@ -43,17 +49,65 @@ const Home = () => {
     [todos]
   );
 
+  const onEdit = useCallback(
+    (e) => {
+      e.preventDefault();
+      setTodos(
+        todos.map((todo) => {
+          if (todo.id === modal.id) {
+            todo = { ...todo, contents: modal.contents };
+          }
+          return todo;
+        })
+      );
+      setModal({ ...modal, isOpen: false });
+    },
+    [todos, modal]
+  );
+
   const onReset = useCallback(() => {
     setContents("");
   }, []);
+
+  const onModal = useCallback(
+    (todo) => {
+      setModal({
+        ...modal,
+        isOpen: !modal.isOpen,
+        contents: todo.contents,
+        id: todo.id,
+      });
+    },
+    [modal]
+  );
+
+  const onModalChange = useCallback(
+    (e) => {
+      const { value } = e.target;
+      setModal({
+        ...modal,
+        contents: value,
+      });
+    },
+    [modal]
+  );
 
   return (
     <>
       <TodoTemplate>
         <TodoTitle />
-        <Form contents={contents} addTodo={addTodo} onChange={onChange} />
-        <TodoList todos={todos} onDelete={onDelete} />
+        <Form>
+          <input type="text" value={contents} onChange={onChange} />
+          <Button onClick={addTodo}>추가</Button>
+        </Form>
+        <TodoList
+          todos={todos}
+          onDelete={onDelete}
+          onModal={onModal}
+          isOpenModal={modal.isOpen}
+        />
       </TodoTemplate>
+      <Modal data={modal} onChange={onModalChange} onEdit={onEdit} />
     </>
   );
 };
