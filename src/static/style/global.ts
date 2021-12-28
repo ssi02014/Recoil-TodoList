@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { Global, css } from "@emotion/react";
+import { color } from "../../config/colorSystem";
 
 export const globalStyle = css`
   * {
@@ -8,5 +9,11 @@ export const globalStyle = css`
     box-sizing: border-box;
   }
   body {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: ${color.main};
   }
 `;
